@@ -36,16 +36,19 @@ public class TransferenciaController {
 	public ResponseEntity<List<Transferencia>> findAll(
 			@RequestParam(value="minDate", defaultValue="2019-01-01") String minDate,
 			@RequestParam(value="maxDate", defaultValue="") String maxDate) {
-		return ResponseEntity.status(HttpStatus.OK).body(service.findByDataTransferenciaBetween(minDate, maxDate));
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(service.findByDataTransferenciaBetween(minDate, maxDate));
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Object> findById(@PathVariable Long id) {
 		Optional<Transferencia> transferenciaOptional = service.findById(id);
-		if (transferenciaOptional.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Transferencia com ID " + id + " não encontrada.");
+		if(transferenciaOptional.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body("Transferencia com ID " + id + " não encontrada.");
 		}
-		return ResponseEntity.status(HttpStatus.OK).body(transferenciaOptional.get());
+			return ResponseEntity.status(HttpStatus.OK)
+				.body(transferenciaOptional.get());
 	}
 	
 	@GetMapping("/nomes/{nome}")
@@ -54,26 +57,30 @@ public class TransferenciaController {
 			@RequestParam(value="minDate", defaultValue="2019-01-01") String minDate,
 			@RequestParam(value="maxDate", defaultValue="") String maxDate) {
 		Optional<List<Transferencia>> transferenciaOptional = service.findByNomeOperadorTransacao(nome);
-		if (transferenciaOptional.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhuma operação foi encontrada.");
+		if(transferenciaOptional.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body("Nenhuma operação foi encontrada.");
 		}
-		return ResponseEntity.status(HttpStatus.OK).body(transferenciaOptional.get());
+			return ResponseEntity.status(HttpStatus.OK)
+				.body(transferenciaOptional.get());
 	}
 	
 	@PostMapping
 	public ResponseEntity<Transferencia> create(@RequestBody Transferencia novaTransferencia) {
 		novaTransferencia.setDataTransferencia(LocalDate.now(ZoneId.of("UTC")));
-		if (novaTransferencia.getNomeOperadorTransacao() == null) {
+		if(novaTransferencia.getNomeOperadorTransacao() == null) {
 			novaTransferencia.setNomeOperadorTransacao("Não informado");
 		}
-		return ResponseEntity.status(HttpStatus.CREATED).body(service.save(novaTransferencia));
+			return ResponseEntity.status(HttpStatus.CREATED)
+				.body(service.save(novaTransferencia));
 	}
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Object> update(@PathVariable Long id, @RequestBody Transferencia novaTransferencia) {
 		Optional<Transferencia> transferenciaOptional = service.findById(id);
-		if (transferenciaOptional.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Transferencia com ID " + id + " não encontrada.");
+		if(transferenciaOptional.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body("Transferencia com ID " + id + " não encontrada.");
 		}
 		var transferenciaModel = transferenciaOptional.get();
 		transferenciaModel.setValor(novaTransferencia.getValor());
@@ -81,17 +88,20 @@ public class TransferenciaController {
 		transferenciaModel.setNomeOperadorTransacao(novaTransferencia.getNomeOperadorTransacao());
 		transferenciaModel.setConta_id(novaTransferencia.getConta_id());
 		
-		return ResponseEntity.status(HttpStatus.OK).body(service.save(transferenciaModel));
+			return ResponseEntity.status(HttpStatus.OK)
+				.body(service.save(transferenciaModel));
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Object> delete(@PathVariable Long id) {
 		Optional<Transferencia> transferenciaOptional = service.findById(id);
-		if (transferenciaOptional.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Transferencia com ID " + id + " não encontrada.");
+		if(transferenciaOptional.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body("Transferencia com ID " + id + " não encontrada.");
 		}
 		service.delete(id);
-		return ResponseEntity.status(HttpStatus.OK).body("Transferencia deletada com sucesso.");
+			return ResponseEntity.status(HttpStatus.OK)
+				.body("Transferencia deletada com sucesso.");
 	}
 
 }
